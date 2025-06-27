@@ -36,5 +36,5 @@ A CLI interface for **Google Translate LLM** using the [Advanced Translation V3 
 ## Usage
 
 ```bash
-bunx gtai
+bunx gtai@latest
 ```
