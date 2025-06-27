@@ -21,12 +21,18 @@ A CLI interface for **Google Translate LLM** using the [Advanced Translation V3 
 - Enable Billing.
 - Enable Cloud Translation API and Cloud Storage (APIs & Services -> Library).
 
-### 3. Service Account
+### 3. Storage Bucket
+
+Google Translation API requires glossaries to be uploaded to the Google Storage.
+
+- Cloud Storage -> Buckets -> Create bucket (default settings are fine)
+
+### 4. Service Account
 
 - Create a service account (IAM & Admin -> Service Accounts -> Create service account).
 - Add roles: Cloud Translation API Editor (`roles/cloudtranslate.editor`) and Storage Admin (`roles/storage.admin`).
 
-### 4. Get Auth Key
+### 5. Get Auth Key
 
 - Click on your Service Account and open Keys tab.
 - Add key -> Create new key -> JSON.
