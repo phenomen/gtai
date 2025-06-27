@@ -15,6 +15,7 @@ import {
   uploadAndCreateGlossary,
   listBuckets,
 } from "./glossary";
+import { isValidLangCode } from "./utils/language-validation";
 
 async function promptForSettings(): Promise<Settings> {
   p.log.info("Let's set up your default languages.");
@@ -30,8 +31,7 @@ async function promptForSettings(): Promise<Settings> {
             if (!value || value.trim().length === 0) {
               return "Source language cannot be empty";
             }
-            const trimmed = value.trim();
-            if (!/^[a-z]{2}(-[A-Z]{2})?$/i.test(trimmed)) {
+            if (!isValidLangCode(value)) {
               return "Please enter a valid language code (en, en-US, ru, es, pt-BR, etc.)";
             }
           },
@@ -44,8 +44,7 @@ async function promptForSettings(): Promise<Settings> {
             if (!value || value.trim().length === 0) {
               return "Target language cannot be empty";
             }
-            const trimmed = value.trim();
-            if (!/^[a-z]{2}(-[A-Z]{2})?$/i.test(trimmed)) {
+            if (!isValidLangCode(value)) {
               return "Please enter a valid language code (en, en-US, ru, es, pt-BR, etc.)";
             }
           },

@@ -1,20 +1,21 @@
 {
   "name": "gtai",
   "description": "CLI tool for Google Translate Advanced LLM",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "src/index.ts",
   "bin": {
     "gtai": "./src/index.ts"
   },
   "type": "module",
   "engines": {
-    "bun": ">=1.2.15"
+    "bun": ">=1.2.17"
   },
   "files": [
     "src/index.ts",
     "src/settings.ts",
     "src/translation.ts",
     "src/glossary.ts",
+    "src/utils",
     "README.md"
   ],
   "keywords": [

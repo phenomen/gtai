@@ -1,3 +1,5 @@
+import { isValidLangCode } from "./utils/language-validation";
+
 export interface Settings {
   defaultSourceLanguage: string;
   defaultTargetLanguage: string;
@@ -22,8 +24,8 @@ export async function loadSettings(): Promise<Settings | null> {
     if (
       typeof settings.defaultSourceLanguage !== "string" ||
       typeof settings.defaultTargetLanguage !== "string" ||
-      settings.defaultSourceLanguage.length !== 2 ||
-      settings.defaultTargetLanguage.length !== 2
+      !isValidLangCode(settings.defaultSourceLanguage) ||
+      !isValidLangCode(settings.defaultTargetLanguage)
     ) {
       return null;
     }
@@ -50,11 +52,11 @@ export async function saveSettings(settings: Settings): Promise<void> {
     }
 
     if (
-      settings.defaultSourceLanguage.length !== 2 ||
-      settings.defaultTargetLanguage.length !== 2
+      !isValidLangCode(settings.defaultSourceLanguage) ||
+      !isValidLangCode(settings.defaultTargetLanguage)
     ) {
       throw new Error(
-        "Invalid settings: language codes must be 2 characters long"
+        "Invalid settings: language codes must be valid (e.g., 'en', 'en-US')"
       );
     }
 
