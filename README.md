@@ -25,7 +25,9 @@ A CLI interface for **Google Translate LLM** using the [Advanced Translation V3 
 
 (Optional) The Google Translation API requires glossaries to be uploaded to Google Cloud Storage. If you intend to use glossaries, you need to create a storage bucket.
 
-- Navigate to Cloud Storage → Buckets → Create bucket (default settings are fine).
+- Cloud Storage → Buckets → Create bucket (default settings are fine).
+
+**Note:** your glossaries needs to be in [unidirectional format](https://cloud.google.com/translate/docs/advanced/glossary#unidirectional_glossaries). Equivalent term sets are not supported.
 
 ### 4. Service Account
 
@@ -34,7 +36,7 @@ A CLI interface for **Google Translate LLM** using the [Advanced Translation V3 
 
 ### 5. Authentication Key
 
-- Click on your service account and open the Keys tab.
+- Click on your service account and navigate to the Keys tab.
 - Add key → Create new key → JSON.
 - Download the JSON key file and save it as `service-account.json`.
 - Place your service account key in your working directory (where you launch `gtai`).
