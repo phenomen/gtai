@@ -7,36 +7,36 @@ A CLI interface for **Google Translate LLM** using the [Advanced Translation V3 
 - 🌐 LLM-powered text translation with language pairs
 - 📚 Custom glossary support for domain-specific translations
 - ⚙️ Persistent settings
-- 📄 File translation (TXT and MD files; PDF soon)
+- 📄 File translation (TXT and MD files; PDF support coming soon)
 
 ## Setup
 
 ### 1. Bun Runtime
 
-[Install Bun](https://bun.sh/). The CLI uses Bun API and does not support Node runtime.
+[Install Bun](https://bun.sh/). The CLI uses the Bun API and does not support Node.js runtime.
 
 ### 2. Google Cloud Project
 
-- Create a Project on [Google Cloud](https://cloud.google.com).
-- Enable Billing.
-- Enable Cloud Translation API and Cloud Storage (APIs & Services -> Library).
+- Create a project on [Google Cloud](https://cloud.google.com).
+- Enable billing for your project.
+- Enable the Cloud Translation API and Cloud Storage API (APIs & Services → Library).
 
-### 3. Google Storage Bucket
+### 3. Google Cloud Storage Bucket
 
-Google Translation API requires glossaries to be uploaded to the Google Storage.
+(Optional) The Google Translation API requires glossaries to be uploaded to Google Cloud Storage. If you intend to use glossaries, you need to create a storage bucket.
 
-- Cloud Storage -> Buckets -> Create bucket (default settings are fine)
+- Navigate to Cloud Storage → Buckets → Create bucket (default settings are fine).
 
 ### 4. Service Account
 
-- Create a service account (IAM & Admin -> Service Accounts -> Create service account).
-- Add roles: Cloud Translation API Editor (`roles/cloudtranslate.editor`) and Storage Admin (`roles/storage.admin`).
+- Create a service account (IAM & Admin → Service Accounts → Create service account).
+- Add the following roles: Cloud Translation API Editor (`roles/cloudtranslate.editor`) and Storage Admin (`roles/storage.admin`).
 
-### 5. Auth Key
+### 5. Authentication Key
 
-- Click on your Service Account and open Keys tab.
-- Add key -> Create new key -> JSON.
-- Download the JSON key file as `service-account.json`.
+- Click on your service account and open the Keys tab.
+- Add key → Create new key → JSON.
+- Download the JSON key file and save it as `service-account.json`.
 - Place your service account key in your working directory (where you launch `gtai`).
 
 ## Usage
@@ -44,3 +44,5 @@ Google Translation API requires glossaries to be uploaded to the Google Storage.
 ```bash
 bunx gtai@latest
 ```
+
+Follow the interactive prompts to configure your translation settings and start translating.
