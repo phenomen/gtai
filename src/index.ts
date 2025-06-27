@@ -433,8 +433,8 @@ async function handleTextTranslation(
       if (!value || value.trim().length === 0) {
         return "Text cannot be empty";
       }
-      if (value.trim().length > 5000) {
-        return "Text is too long (max 5000 characters)";
+      if (value.trim().length > 20000) {
+        return "Text is too long (max 20000 characters)";
       }
     },
   });
