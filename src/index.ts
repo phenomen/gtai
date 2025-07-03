@@ -67,6 +67,7 @@ async function promptForSettings(): Promise<Settings> {
     defaultSourceLanguage: settingsInputs.defaultSourceLanguage.trim(),
     defaultTargetLanguage: settingsInputs.defaultTargetLanguage.trim(),
     activeGlossary: undefined,
+    glossaryIgnoreCase: true,
   };
 
   await saveSettings(settings);
@@ -76,10 +77,11 @@ async function promptForSettings(): Promise<Settings> {
 }
 
 async function manageSettings(currentSettings: Settings): Promise<Settings> {
-  p.note(`Source language: ${currentSettings.defaultSourceLanguage}\n
-Target language: ${currentSettings.defaultTargetLanguage}\n
-Active glossary: ${
-    currentSettings.activeGlossary?.split("/").pop() || "None"
+  p.note(`Source language: ${currentSettings.defaultSourceLanguage}
+Target language: ${currentSettings.defaultTargetLanguage}
+Active glossary: ${currentSettings.activeGlossary?.split("/").pop() || "None"}
+Glossary case sensitivity: ${
+    currentSettings.glossaryIgnoreCase === true ? "Disabled" : "Enabled"
   }`);
 
   const action = await p.select({
@@ -115,6 +117,7 @@ async function manageGlossaries(currentSettings: Settings): Promise<Settings> {
       { value: "list", label: "📗 Set active glossary" },
       { value: "upload", label: "📙 Upload new glossary" },
       { value: "delete", label: "📕 Delete glossary" },
+      { value: "ignoreCase", label: "🔤 Toggle case sensitivity" },
       { value: "back", label: "🏠 Back to main menu" },
     ],
   });
@@ -134,6 +137,10 @@ async function manageGlossaries(currentSettings: Settings): Promise<Settings> {
 
   if (action === "delete") {
     return await deleteExistingGlossary(serviceAccount, currentSettings);
+  }
+
+  if (action === "ignoreCase") {
+    return await toggleIgnoreCase(currentSettings);
   }
 
   return currentSettings;
@@ -209,7 +216,7 @@ async function uploadNewGlossary(
   serviceAccount: any,
   currentSettings: Settings
 ): Promise<void> {
-  const filePath = await p.text({
+  const filePath = await p.path({
     message: "Enter path to glossary file (CSV or TSV)",
     validate: (value) => {
       if (!value || value.trim().length === 0) {
@@ -337,6 +344,33 @@ async function uploadNewGlossary(
   }
 }
 
+async function toggleIgnoreCase(currentSettings: Settings): Promise<Settings> {
+  const currentValue = currentSettings.glossaryIgnoreCase ?? true;
+
+  const newValue = await p.confirm({
+    message: `Glossary currently is ${
+      currentValue ? "case-insensitive" : "case-sensitive"
+    }. Make it case-insensitive?`,
+    initialValue: currentValue,
+  });
+
+  if (p.isCancel(newValue)) {
+    return currentSettings;
+  }
+
+  const updatedSettings: Settings = {
+    ...currentSettings,
+    glossaryIgnoreCase: newValue,
+  };
+
+  await saveSettings(updatedSettings);
+  p.log.success(
+    `Glossary is now ${newValue ? "case-insensitive" : "case-sensitive"}!`
+  );
+
+  return updatedSettings;
+}
+
 async function deleteExistingGlossary(
   serviceAccount: any,
   currentSettings: Settings
@@ -459,7 +493,8 @@ async function handleTextTranslation(
       text.trim(),
       sourceLanguage,
       targetLanguage,
-      settings.activeGlossary
+      settings.activeGlossary,
+      settings.glossaryIgnoreCase
     );
 
     spinner.stop("Translation completed!");
@@ -510,7 +545,7 @@ async function handleFileTranslation(
   serviceAccount: any,
   settings: Settings
 ): Promise<void> {
-  const filePath = await p.text({
+  const filePath = await p.path({
     message: "Enter path to file (TXT or MD)",
     validate: (value) => {
       if (!value || value.trim().length === 0) {
@@ -548,9 +583,9 @@ async function handleFileTranslation(
       return;
     }
 
-    if (text.length > 50000) {
+    if (text.length > 500000) {
       spinner.stop("File too large");
-      p.log.error("File is too large (max 50,000 characters)");
+      p.log.error("File is too large (max 500,000 characters)");
       return;
     }
 
@@ -568,7 +603,8 @@ async function handleFileTranslation(
       text,
       settings.defaultSourceLanguage,
       settings.defaultTargetLanguage,
-      settings.activeGlossary
+      settings.activeGlossary,
+      settings.glossaryIgnoreCase
     );
 
     // Generate output filename with target language suffix

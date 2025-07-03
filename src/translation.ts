@@ -5,7 +5,8 @@ export async function translateText(
   text: string,
   sourceLanguage: string,
   targetLanguage: string,
-  glossaryPath?: string
+  glossaryPath?: string,
+  glossaryIgnoreCase?: boolean
 ): Promise<string> {
   // Input validation
   if (!text || text.trim().length === 0) {
@@ -33,7 +34,7 @@ export async function translateText(
     glossaryConfig: glossaryPath
       ? {
           glossary: glossaryPath,
-          ignoreCase: true,
+          ignoreCase: glossaryIgnoreCase ?? true,
         }
       : undefined,
   };

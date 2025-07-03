@@ -4,6 +4,7 @@ export interface Settings {
   defaultSourceLanguage: string;
   defaultTargetLanguage: string;
   activeGlossary?: string;
+  glossaryIgnoreCase?: boolean;
 }
 
 const SETTINGS_FILE = "./.gtai.json";
@@ -34,6 +35,14 @@ export async function loadSettings(): Promise<Settings | null> {
     if (
       settings.activeGlossary !== undefined &&
       typeof settings.activeGlossary !== "string"
+    ) {
+      return null;
+    }
+
+    // glossaryIgnoreCase is optional, but if present should be a boolean
+    if (
+      settings.glossaryIgnoreCase !== undefined &&
+      typeof settings.glossaryIgnoreCase !== "boolean"
     ) {
       return null;
     }
@@ -84,6 +93,7 @@ export async function initializeSettings(): Promise<Settings> {
     defaultSourceLanguage: "en",
     defaultTargetLanguage: "ru",
     activeGlossary: undefined,
+    glossaryIgnoreCase: true,
   };
 
   await saveSettings(defaultSettings);
