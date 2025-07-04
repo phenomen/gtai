@@ -1,7 +1,7 @@
 {
   "name": "gtai",
   "description": "CLI tool for Google Translate Advanced LLM",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "main": "dist/index.js",
   "bin": {
     "gtai": "./dist/index.js"
@@ -30,17 +30,13 @@
     "lint": "oxlint ./src"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.18",
-    "oxlint": "^1.5.0"
-  },
-  "peerDependencies": {
-    "typescript": "^5.8.3"
-  },
-  "dependencies": {
     "@clack/prompts": "1.0.0-alpha.1",
     "@google-cloud/storage": "^7.16.0",
     "@google-cloud/translate": "^9.1.0",
-    "clipboardy": "^4.0.0"
+    "@types/bun": "^1.2.18",
+    "clipboardy": "^4.0.0",
+    "oxlint": "^1.5.0",
+    "typescript": "^5.8.3"
   },
   "trustedDependencies": [
     "protobufjs"
