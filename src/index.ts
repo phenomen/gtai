@@ -350,7 +350,7 @@ async function toggleIgnoreCase(currentSettings: Settings): Promise<Settings> {
   const newValue = await p.confirm({
     message: `Glossary currently is ${
       currentValue ? "case-insensitive" : "case-sensitive"
-    }. Make it case-insensitive?`,
+    }. Make it ${currentValue ? "case-sensitive" : "case-insensitive"}?`,
     initialValue: currentValue,
   });
 

@@ -65,11 +65,24 @@ export async function uploadGlossaryFile(
 
     return `gs://${bucketName}/glossaries/${fileName}`;
   } catch (error) {
-    throw new Error(
-      `Failed to upload file to Google Storage: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
+    // Google Cloud API errors often have complex structure, so capture full details
+    let errorMessage = "Unknown error";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error && typeof error === "object") {
+      // Handle Google Cloud API error structure
+      if ("message" in error && error.message) {
+        errorMessage = error.message;
+      } else if ("details" in error && error.details) {
+        errorMessage = error.details;
+      } else if ("code" in error && "message" in error) {
+        errorMessage = `${error.code}: ${error.message}`;
+      } else {
+        // Fallback: stringify the entire error object
+        errorMessage = JSON.stringify(error, null, 2);
+      }
+    }
+    throw new Error(`Failed to upload file to Google Storage: ${errorMessage}`);
   }
 }
 
@@ -108,11 +121,24 @@ export async function createGlossary(
     await operation.promise();
     return glossaryPath;
   } catch (error) {
-    throw new Error(
-      `Failed to create glossary: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
+    // Google Cloud API errors often have complex structure, so capture full details
+    let errorMessage = "Unknown error";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error && typeof error === "object") {
+      // Handle Google Cloud API error structure
+      if ("message" in error && error.message) {
+        errorMessage = error.message;
+      } else if ("details" in error && error.details) {
+        errorMessage = error.details;
+      } else if ("code" in error && "message" in error) {
+        errorMessage = `${error.code}: ${error.message}`;
+      } else {
+        // Fallback: stringify the entire error object
+        errorMessage = JSON.stringify(error, null, 2);
+      }
+    }
+    throw new Error(`Failed to create glossary: ${errorMessage}`);
   }
 }
 
@@ -138,11 +164,24 @@ export async function listGlossaries(
       entryCount: glossary.entryCount || 0,
     }));
   } catch (error) {
-    throw new Error(
-      `Failed to list glossaries: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
+    // Google Cloud API errors often have complex structure, so capture full details
+    let errorMessage = "Unknown error";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error && typeof error === "object") {
+      // Handle Google Cloud API error structure
+      if ("message" in error && error.message) {
+        errorMessage = error.message;
+      } else if ("details" in error && error.details) {
+        errorMessage = error.details;
+      } else if ("code" in error && "message" in error) {
+        errorMessage = `${error.code}: ${error.message}`;
+      } else {
+        // Fallback: stringify the entire error object
+        errorMessage = JSON.stringify(error, null, 2);
+      }
+    }
+    throw new Error(`Failed to list glossaries: ${errorMessage}`);
   }
 }
 
@@ -160,11 +199,24 @@ export async function deleteGlossary(
     });
     await operation.promise();
   } catch (error) {
-    throw new Error(
-      `Failed to delete glossary: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
+    // Google Cloud API errors often have complex structure, so capture full details
+    let errorMessage = "Unknown error";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (error && typeof error === "object") {
+      // Handle Google Cloud API error structure
+      if ("message" in error && error.message) {
+        errorMessage = error.message;
+      } else if ("details" in error && error.details) {
+        errorMessage = error.details;
+      } else if ("code" in error && "message" in error) {
+        errorMessage = `${error.code}: ${error.message}`;
+      } else {
+        // Fallback: stringify the entire error object
+        errorMessage = JSON.stringify(error, null, 2);
+      }
+    }
+    throw new Error(`Failed to delete glossary: ${errorMessage}`);
   }
 }
 
