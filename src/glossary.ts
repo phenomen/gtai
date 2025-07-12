@@ -1,6 +1,7 @@
 import { Storage } from "@google-cloud/storage";
 import { TranslationServiceClient } from "@google-cloud/translate";
 import * as path from "path";
+import * as fs from "fs";
 
 export interface GlossaryInfo {
   name: string;
@@ -33,9 +34,7 @@ export async function uploadGlossaryFile(
   filePath: string,
   bucketName: string
 ): Promise<string> {
-  const file = Bun.file(filePath);
-
-  if (!(await file.exists())) {
+  if (!fs.existsSync(filePath)) {
     throw new Error(`File not found: ${filePath}`);
   }
 
@@ -55,8 +54,8 @@ export async function uploadGlossaryFile(
   const storageFile = bucket.file(`glossaries/${fileName}`);
 
   try {
-    const fileBuffer = await file.arrayBuffer();
-    await storageFile.save(Buffer.from(fileBuffer), {
+    const fileBuffer = fs.readFileSync(filePath);
+    await storageFile.save(fileBuffer, {
       metadata: {
         contentType:
           fileExtension === ".csv" ? "text/csv" : "text/tab-separated-values",
@@ -71,11 +70,16 @@ export async function uploadGlossaryFile(
       errorMessage = error.message;
     } else if (error && typeof error === "object") {
       // Handle Google Cloud API error structure
-      if ("message" in error && error.message) {
+      if ("message" in error && typeof error.message === "string") {
         errorMessage = error.message;
-      } else if ("details" in error && error.details) {
+      } else if ("details" in error && typeof error.details === "string") {
         errorMessage = error.details;
-      } else if ("code" in error && "message" in error) {
+      } else if (
+        "code" in error &&
+        "message" in error &&
+        typeof error.code === "string" &&
+        typeof error.message === "string"
+      ) {
         errorMessage = `${error.code}: ${error.message}`;
       } else {
         // Fallback: stringify the entire error object
@@ -127,11 +131,16 @@ export async function createGlossary(
       errorMessage = error.message;
     } else if (error && typeof error === "object") {
       // Handle Google Cloud API error structure
-      if ("message" in error && error.message) {
+      if ("message" in error && typeof error.message === "string") {
         errorMessage = error.message;
-      } else if ("details" in error && error.details) {
+      } else if ("details" in error && typeof error.details === "string") {
         errorMessage = error.details;
-      } else if ("code" in error && "message" in error) {
+      } else if (
+        "code" in error &&
+        "message" in error &&
+        typeof error.code === "string" &&
+        typeof error.message === "string"
+      ) {
         errorMessage = `${error.code}: ${error.message}`;
       } else {
         // Fallback: stringify the entire error object
@@ -170,11 +179,16 @@ export async function listGlossaries(
       errorMessage = error.message;
     } else if (error && typeof error === "object") {
       // Handle Google Cloud API error structure
-      if ("message" in error && error.message) {
+      if ("message" in error && typeof error.message === "string") {
         errorMessage = error.message;
-      } else if ("details" in error && error.details) {
+      } else if ("details" in error && typeof error.details === "string") {
         errorMessage = error.details;
-      } else if ("code" in error && "message" in error) {
+      } else if (
+        "code" in error &&
+        "message" in error &&
+        typeof error.code === "string" &&
+        typeof error.message === "string"
+      ) {
         errorMessage = `${error.code}: ${error.message}`;
       } else {
         // Fallback: stringify the entire error object
@@ -205,11 +219,16 @@ export async function deleteGlossary(
       errorMessage = error.message;
     } else if (error && typeof error === "object") {
       // Handle Google Cloud API error structure
-      if ("message" in error && error.message) {
+      if ("message" in error && typeof error.message === "string") {
         errorMessage = error.message;
-      } else if ("details" in error && error.details) {
+      } else if ("details" in error && typeof error.details === "string") {
         errorMessage = error.details;
-      } else if ("code" in error && "message" in error) {
+      } else if (
+        "code" in error &&
+        "message" in error &&
+        typeof error.code === "string" &&
+        typeof error.message === "string"
+      ) {
         errorMessage = `${error.code}: ${error.message}`;
       } else {
         // Fallback: stringify the entire error object

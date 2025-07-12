@@ -1,21 +1,24 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node --no-deprecation
+
 import * as p from "@clack/prompts";
 import clipboard from "clipboardy";
-import { translateText } from "./translation";
+import { translateText } from "./translation.js";
 import {
   loadSettings,
   saveSettings,
   settingsExist,
   loadServiceAccount,
   type Settings,
-} from "./settings";
+} from "./settings.js";
 import {
   listGlossaries,
   deleteGlossary,
   uploadAndCreateGlossary,
   listBuckets,
-} from "./glossary";
-import { isValidLangCode } from "./utils/language-validation";
+} from "./glossary.js";
+import { isValidLangCode } from "./utils/language-validation.js";
+import * as fs from "fs";
+import * as path from "path";
 
 async function promptForSettings(): Promise<Settings> {
   p.log.info("Let's set up your default languages.");
@@ -233,9 +236,9 @@ async function uploadNewGlossary(
     return;
   }
 
-  // Check if file exists using Bun API after validation
-  const file = Bun.file(filePath.trim());
-  if (!(await file.exists())) {
+  // Check if file exists using Node.js fs API after validation
+  const filePathResolved = path.resolve(filePath.trim());
+  if (!fs.existsSync(filePathResolved)) {
     p.log.error("File does not exist");
     return;
   }
@@ -325,7 +328,7 @@ async function uploadNewGlossary(
   try {
     await uploadAndCreateGlossary(
       serviceAccount,
-      filePath.trim(),
+      filePathResolved,
       bucketName,
       glossaryName.trim(),
       languages.source.trim(),
@@ -563,8 +566,8 @@ async function handleFileTranslation(
   }
 
   // Check if file exists
-  const file = Bun.file(filePath.trim());
-  if (!(await file.exists())) {
+  const filePathResolved = path.resolve(filePath.trim());
+  if (!fs.existsSync(filePathResolved)) {
     p.log.error("File does not exist");
     return;
   }
@@ -575,7 +578,7 @@ async function handleFileTranslation(
   let translateSpinner: any = null;
 
   try {
-    const text = await file.text();
+    const text = fs.readFileSync(filePathResolved, "utf-8");
 
     if (text.trim().length === 0) {
       spinner.stop("File is empty");
@@ -615,7 +618,7 @@ async function handleFileTranslation(
     const outputPath = `${baseName}-${settings.defaultTargetLanguage}${extension}`;
 
     // Write translated content to new file
-    await Bun.write(outputPath, result);
+    fs.writeFileSync(outputPath, result);
 
     translateSpinner.stop("Translation completed!");
     p.log.success(`File translated and saved as: ${outputPath}`);

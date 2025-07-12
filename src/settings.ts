@@ -1,4 +1,6 @@
-import { isValidLangCode } from "./utils/language-validation";
+import { isValidLangCode } from "./utils/language-validation.js";
+import * as fs from "fs";
+import * as path from "path";
 
 export interface Settings {
   defaultSourceLanguage: string;
@@ -12,13 +14,13 @@ const SERVICE_ACCOUNT_FILE = "./service-account.json";
 
 export async function loadSettings(): Promise<Settings | null> {
   try {
-    const settingsFile = Bun.file(SETTINGS_FILE);
+    const settingsFilePath = path.resolve(SETTINGS_FILE);
 
-    if (!(await settingsFile.exists())) {
+    if (!fs.existsSync(settingsFilePath)) {
       return null;
     }
 
-    const settingsText = await settingsFile.text();
+    const settingsText = fs.readFileSync(settingsFilePath, "utf-8");
     const settings = JSON.parse(settingsText) as Settings;
 
     // Validate settings structure
@@ -69,7 +71,7 @@ export async function saveSettings(settings: Settings): Promise<void> {
       );
     }
 
-    await Bun.write(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
   } catch (error) {
     throw new Error(
       `Failed to save settings: ${
@@ -81,8 +83,8 @@ export async function saveSettings(settings: Settings): Promise<void> {
 
 export async function settingsExist(): Promise<boolean> {
   try {
-    const settingsFile = Bun.file(SETTINGS_FILE);
-    return await settingsFile.exists();
+    const settingsFilePath = path.resolve(SETTINGS_FILE);
+    return fs.existsSync(settingsFilePath);
   } catch (error) {
     return false;
   }
@@ -101,16 +103,16 @@ export async function initializeSettings(): Promise<Settings> {
 }
 
 export async function loadServiceAccount(): Promise<any> {
-  const serviceAccountFile = Bun.file(SERVICE_ACCOUNT_FILE);
+  const serviceAccountFilePath = path.resolve(SERVICE_ACCOUNT_FILE);
 
-  if (!(await serviceAccountFile.exists())) {
+  if (!fs.existsSync(serviceAccountFilePath)) {
     throw new Error(
       "Google Service Account not found. Please add a valid service-account.json to this directory."
     );
   }
 
   try {
-    const serviceAccountText = await serviceAccountFile.text();
+    const serviceAccountText = fs.readFileSync(serviceAccountFilePath, "utf-8");
     const serviceAccount = JSON.parse(serviceAccountText);
 
     // Basic validation of service account structure
