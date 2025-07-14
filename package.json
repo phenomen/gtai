@@ -1,17 +1,16 @@
 {
   "name": "gtai",
   "description": "CLI tool for Google Translate Advanced LLM",
-  "version": "1.2.3",
-  "main": "dist/index.js",
+  "version": "1.2.5",
   "bin": {
-    "gtai": "./dist/index.js"
+    "gtai": "./src/index.ts"
   },
   "type": "module",
   "engines": {
-    "bun": ">=1.2.17"
+    "bun": ">=1.2.18"
   },
   "files": [
-    "dist",
+    "src",
     "README.md"
   ],
   "keywords": [
@@ -24,19 +23,19 @@
     "i18n"
   ],
   "scripts": {
-    "build": "bun build ./src/index.ts --outfile ./dist/index.js --target bun",
-    "dev": "bun run ./src/index.ts",
-    "typecheck": "tsc --noEmit",
+    "start": "bun run ./src/index.ts",
     "lint": "oxlint ./src"
   },
   "devDependencies": {
+    "@types/bun": "^1.2.18",
+    "oxlint": "^1.5.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
     "@clack/prompts": "1.0.0-alpha.1",
     "@google-cloud/storage": "^7.16.0",
     "@google-cloud/translate": "^9.1.0",
-    "@types/bun": "^1.2.18",
-    "clipboardy": "^4.0.0",
-    "oxlint": "^1.5.0",
-    "typescript": "^5.8.3"
+    "clipboardy": "^4.0.0"
   },
   "trustedDependencies": [
     "protobufjs"
