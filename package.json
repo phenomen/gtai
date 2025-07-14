@@ -1,7 +1,7 @@
 {
   "name": "gtai",
   "description": "CLI tool for Google Translate Advanced LLM",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "bin": {
     "gtai": "./src/index.ts"
   },
